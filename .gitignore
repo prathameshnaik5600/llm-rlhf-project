@@ -1,26 +1,42 @@
+# -------------------------
 # Python
+# -------------------------
 __pycache__/
-*.pyc
-*.pyo
+*.py[cod]
+*$py.class
 
-# Virtual Environment
+# Virtual Environments
 venv/
 rlhf311/
-
-# Models
-models/
-outputs/
-checkpoints/
-
-# Logs
-wandb/
-logs/
+.env
 
 # VS Code
 .vscode/
 
 # Jupyter
 .ipynb_checkpoints/
+
+# HuggingFace cache
+.cache/
+huggingface/
+
+# Model files
+models/
+checkpoints/
+outputs/
+logs/
+wandb/
+runs/
+
+# Dataset cache
+data/processed/
+data/cache/
+
+# LoRA adapters
+adapters/
+
+# TensorBoard
+events.out.tfevents.*
 
 # OS
 .DS_Store
