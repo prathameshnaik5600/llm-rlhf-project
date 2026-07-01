@@ -1,0 +1,41 @@
+# ============================================================
+# model_config.yaml — Base model & LoRA/QLoRA settings
+# ============================================================
+
+model:
+  # Choose one:
+  name: "mistralai/Mistral-7B-v0.1"
+  # name: "meta-llama/Meta-Llama-3-8B"
+
+  # Quantization (QLoRA) — set to false for full precision
+  load_in_4bit: false
+  bnb_4bit_compute_dtype: "bfloat16"   # bfloat16 | float16
+  bnb_4bit_quant_type: "nf4"            # nf4 | fp4
+  bnb_4bit_use_double_quant: true       # nested quantization
+
+  # Precision
+  torch_dtype: "bfloat16"
+  device_map: "auto"
+
+# LoRA adapter settings
+lora:
+  r: 16                        # Rank — higher = more capacity, more VRAM
+  lora_alpha: 32               # Scaling factor (usually 2x rank)
+  lora_dropout: 0.05
+  bias: "none"                 # none | all | lora_only
+  task_type: "CAUSAL_LM"
+
+  # Which layers to inject LoRA into (Mistral/LLaMA naming)
+  target_modules:
+    - "q_proj"
+    - "k_proj"
+    - "v_proj"
+    - "o_proj"
+    - "gate_proj"
+    - "up_proj"
+    - "down_proj"
+
+  # For reward model — classification head
+  reward_target_modules:
+    - "q_proj"
+    - "v_proj"

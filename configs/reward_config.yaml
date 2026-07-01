@@ -1,0 +1,51 @@
+# ============================================================
+# reward_config.yaml — Reward Model training config
+# ============================================================
+
+training:
+  output_dir: "models/reward"
+  num_train_epochs: 1               # Reward models overfit quickly
+  per_device_train_batch_size: 2
+  per_device_eval_batch_size: 2
+  gradient_accumulation_steps: 8
+  gradient_checkpointing: true
+
+  learning_rate: 1.0e-5             # Lower LR than SFT
+  lr_scheduler_type: "linear"
+  warmup_ratio: 0.05
+  weight_decay: 0.01
+
+  optim: "paged_adamw_32bit"
+  max_grad_norm: 1.0
+  bf16: true
+
+  # Reward model specific
+  max_length: 1024
+  
+  eval_strategy: "steps"
+  eval_steps: 100
+  save_strategy: "steps"
+  save_steps: 100
+  save_total_limit: 2
+  load_best_model_at_end: true
+  metric_for_best_model: "eval_accuracy"
+
+  logging_steps: 25
+  report_to: "wandb"
+  run_name: "reward-model-training"
+
+data:
+  preferences_path: "data/preferences"
+  train_file: "train_preferences.jsonl"
+  eval_file: "eval_preferences.jsonl"
+  max_samples: 10000                # Cap preference data size
+
+reward_model:
+  # Use the SFT model as base (better than raw base model)
+  base_model: "models/finetuned"
+  
+  # Loss function
+  loss_type: "ranking"              # ranking | binary_cross_entropy
+  
+  # Regularisation — prevents reward hacking
+  kl_penalty: 0.1

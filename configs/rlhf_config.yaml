@@ -1,0 +1,54 @@
+# ============================================================
+# rlhf_config.yaml — PPO / RLHF loop configuration
+# ============================================================
+
+ppo:
+  # Core PPO hyperparameters
+  learning_rate: 1.4e-5
+  batch_size: 16                    # Prompts per PPO step
+  mini_batch_size: 4
+  gradient_accumulation_steps: 1
+  ppo_epochs: 4                     # PPO epochs per batch
+  
+  # Clipping & regularisation
+  cliprange: 0.2                    # PPO clip epsilon
+  cliprange_value: 0.2
+  vf_coef: 0.1                      # Value function coefficient
+  
+  # KL penalty — critical to prevent model collapse
+  init_kl_coef: 0.2                 # Starting KL penalty weight
+  target_kl: 6.0                    # Target KL divergence
+  horizon: 10000                    # KL adaptation horizon
+  adap_kl_ctrl: true                # Adaptive KL control
+  
+  # Reward shaping
+  gamma: 1.0                        # Discount factor
+  lam: 0.95                         # GAE lambda
+  
+  # Generation settings (during rollout)
+  max_new_tokens: 256
+  temperature: 0.7
+  top_k: 50
+  top_p: 0.9
+  do_sample: true
+
+training:
+  output_dir: "models/rlhf_final"
+  total_ppo_steps: 1000             # Total training steps
+  
+  # Checkpointing
+  save_freq: 100
+  
+  # Logging
+  log_freq: 10
+  report_to: "wandb"
+  run_name: "rlhf-ppo-loop"
+
+models:
+  policy_model: "models/finetuned"  # SFT model = starting policy
+  reward_model: "models/reward"
+  ref_model: "models/finetuned"     # Reference model for KL
+
+data:
+  prompts_path: "data/processed/rlhf_prompts.jsonl"
+  max_prompt_length: 512

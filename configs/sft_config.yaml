@@ -1,0 +1,57 @@
+# ============================================================
+# sft_config.yaml — Supervised Fine-Tuning hyperparameters
+# ============================================================
+
+training:
+  output_dir: "models/finetuned"
+  num_train_epochs: 3
+  per_device_train_batch_size: 4
+  per_device_eval_batch_size: 4
+  gradient_accumulation_steps: 4    # Effective batch = 4 * 4 = 16
+  gradient_checkpointing: true
+  
+  # Learning rate schedule
+  learning_rate: 2.0e-4
+  lr_scheduler_type: "cosine"
+  warmup_ratio: 0.03
+  weight_decay: 0.001
+
+  # Optimizer
+  optim: "adamw_torch"        # Memory-efficient for QLoRA
+  adam_beta1: 0.9
+  adam_beta2: 0.999
+  adam_epsilon: 1.0e-8
+  max_grad_norm: 1.
+
+  # Precision
+  bf16: true                         # Use bfloat16 (Ampere+)
+  fp16: false
+
+  # Sequence length
+  max_seq_length: 2048               # Reduce to 1024 if OOM
+  packing: true                      # Pack short sequences together
+
+  # Evaluation & saving
+  eval_strategy: "steps"
+  eval_steps: 200
+  save_strategy: "steps"
+  save_steps: 200
+  save_total_limit: 3
+  load_best_model_at_end: true
+  metric_for_best_model: "eval_loss"
+
+  # Logging
+  logging_steps: 50
+  report_to: none                 # wandb | tensorboard | none
+  run_name: "sft-domain-finetune"
+
+data:
+  dataset_path: "data/processed"
+  train_split: "train"
+  eval_split: "validation"
+  text_field: "text"                 # Formatted instruction field
+  
+  # Data mixing (optional — mix domain data with general)
+  domain_data_weight: 0.8
+  general_data_weight: 0.2
+  general_dataset: "HuggingFaceTB/smoltalk"  # Small general corpus
