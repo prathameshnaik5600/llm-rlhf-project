@@ -1,5 +1,11 @@
 # Domain-Specific LLM Fine-Tuning with RLHF
-
+![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python)
+![PyTorch](https://img.shields.io/badge/PyTorch-2.x-red?logo=pytorch)
+![Transformers](https://img.shields.io/badge/HuggingFace-Transformers-yellow)
+![License](https://img.shields.io/badge/License-MIT-green)
+![Status](https://img.shields.io/badge/Status-Active-success)
+![LoRA](https://img.shields.io/badge/PEFT-LoRA-orange)
+![RLHF](https://img.shields.io/badge/RLHF-PPO-purple)
 A fully production-ready pipeline for fine-tuning open-source LLMs (Mistral 7B / LLaMA 3 8B) on niche domains using **LoRA/QLoRA**, followed by a **lightweight RLHF loop** driven by human preference data.
 
 ---
